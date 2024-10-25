@@ -1,0 +1,228 @@
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: circleci/openjdk:14-jdk-buster
+    steps:
+      - checkout
+      - restore_cache:
+          key: claims-service-{{ checksum "pom.xml" }}
+      - run:
+          name: Pulling dependencies
+          command: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: claims-service-{{ checksum "pom.xml" }}
+      - run:
+          name: Run test cases
+          command: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent test
+      - run:
+          name: Analyze on SonarCloud
+          command: mvn verify sonar:sonar -Dsonar.projectKey=lctafrica_claims-apis
+  build:
+    docker:
+      - image: circleci/openjdk:14-jdk-buster
+    steps:
+      - checkout
+      - run:
+          name: Installing fonts
+          command: |
+             sudo apt-get update
+             sudo apt-get -y -qq update || sudo apt-get -y -qq update
+             sudo apt-get -y -qq install fontconfig
+             sudo apt-get -y -qq install libfreetype6
+             sudo apt-get -y -qq install libfontconfig1
+             sudo apt-get -y -qq install ttf-dejavu-extra
+
+      - restore_cache:
+          key: claims-service-{{ checksum "pom.xml" }}
+      - run:
+          name: Pulling dependencies
+          command: mvn dependency:go-offline
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: claims-service-{{ checksum "pom.xml" }}
+      - run:
+          name: Package and generate jar file
+          command: mvn package
+      - store_artifacts:
+          path: target/claims-apis-0.0.1-SNAPSHOT.jar
+      - persist_to_workspace:
+          root: target
+          paths:
+            - claims-apis-0.0.1-SNAPSHOT.jar
+
+  dev-build-and-deploy:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - REGISTRY_URL: "registry.digitalocean.com"
+      - REGISTRY_NAME: "lct-registry"
+      - SERVICE_NAME: "claims-apis"
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            apt-get install -qq -y gettext
+            apt-get install -y wget
+      - setup_remote_docker
+      - attach_workspace:
+          at: /target
+      - run:
+          name: Docker build and push
+          command: |
+            cp -r /target .
+            docker build \
+              -t $REGISTRY_URL/$REGISTRY_NAME/$SERVICE_NAME:${CIRCLE_SHA1} .
+            docker login -u $DIG_ACCESS_TOKEN -p $DIG_ACCESS_TOKEN $REGISTRY_URL
+            docker push \
+              $REGISTRY_URL/$REGISTRY_NAME/$SERVICE_NAME:${CIRCLE_SHA1}
+      - run:
+          name: Add doctl CLI
+          command: |
+            mkdir -p ~/.config
+            cd ~ 
+            wget https://github.com/digitalocean/doctl/releases/download/v1.92.0/doctl-1.92.0-linux-amd64.tar.gz
+            tar xf ~/doctl-1.92.0-linux-amd64.tar.gz
+            mv ~/doctl /usr/local/bin
+      - run:
+          name: Deploy
+          command: |
+            doctl auth init -t $DIG_ACCESS_TOKEN
+            doctl kubernetes cluster kubeconfig save $DEV_CLUSTER_ID
+            envsubst < ${HOME}/project/.k8_manifest/claims-deployment.yaml > ${HOME}/project/k8s.yml
+            kubectl apply -f ${HOME}/project/k8s.yml
+            kubectl rollout status deployment/claims-deployment -n backend
+
+  test-build-and-deploy:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - REGISTRY_URL: "registry.digitalocean.com"
+      - REGISTRY_NAME: "lct-registry"
+      - SERVICE_NAME: "claims-apis"
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies
+          command: |
+            apt-get install -qq -y gettext
+            apt-get install -y wget
+      - setup_remote_docker
+      - attach_workspace:
+          at: /target
+      - run:
+          name: Docker build and push
+          command: |
+            cp -r /target .
+            docker build \
+              -t $REGISTRY_URL/$REGISTRY_NAME/$SERVICE_NAME:${CIRCLE_SHA1} .
+            docker login -u $DIG_ACCESS_TOKEN -p $DIG_ACCESS_TOKEN $REGISTRY_URL
+            docker push \
+              $REGISTRY_URL/$REGISTRY_NAME/$SERVICE_NAME:${CIRCLE_SHA1}
+      - run:
+          name: Add doctl CLI
+          command: |
+            mkdir -p ~/.config
+            cd ~ 
+            wget https://github.com/digitalocean/doctl/releases/download/v1.92.0/doctl-1.92.0-linux-amd64.tar.gz
+            tar xf ~/doctl-1.92.0-linux-amd64.tar.gz
+            mv ~/doctl /usr/local/bin
+      - run:
+          name: Deploy
+          command: |
+            doctl auth init -t $DIG_ACCESS_TOKEN
+            doctl kubernetes cluster kubeconfig save $UAT_CLUSTER_ID
+            envsubst < ${HOME}/project/.k8_manifest/claims-deployment.yaml > ${HOME}/project/k8s.yml
+            kubectl apply -f ${HOME}/project/k8s.yml
+            kubectl rollout status deployment/claims-deployment -n backend
+
+  prod-build-and-deploy:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "lct-v2"
+      - GOOGLE_PROJECT_ID: "lctafrica"
+      - GOOGLE_COMPUTE_ZONE: "europe-west3"
+      - GOOGLE_CLUSTER_NAME: "lct-prod-cluster"
+      - GOOGLE_ACCOUNT: "service@lctafrica.iam.gserviceaccount.com"
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            apt-get install -qq -y gettext
+            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+            export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+            sudo apt-get update && sudo apt-get --only-upgrade install google-cloud-sdk-nomos google-cloud-sdk-app-engine-python-extras google-cloud-sdk-gke-gcloud-auth-plugin google-cloud-sdk-pubsub-emulator google-cloud-sdk-datastore-emulator google-cloud-sdk-spanner-emulator google-cloud-sdk-cloud-build-local google-cloud-sdk-skaffold google-cloud-sdk-log-streaming google-cloud-sdk-app-engine-grpc google-cloud-sdk-package-go-module google-cloud-sdk-anthos-auth google-cloud-sdk-terraform-tools google-cloud-sdk-bigtable-emulator google-cloud-sdk-cloud-run-proxy google-cloud-sdk-firestore-emulator google-cloud-sdk-app-engine-go kubectl google-cloud-sdk-kpt google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-java google-cloud-sdk-kubectl-oidc google-cloud-sdk-harbourbridge google-cloud-sdk-config-connector google-cloud-sdk-cbt google-cloud-sdk-datalab google-cloud-sdk-minikube google-cloud-sdk-local-extract google-cloud-sdk
+            gcloud --quiet config set account $GOOGLE_ACCOUNT
+            gcloud --quiet config set project $GOOGLE_PROJECT_ID
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+      - setup_remote_docker
+      - attach_workspace:
+          at: /target
+      - run:
+          name: Docker build and push
+          command: |
+            cp -r /target .
+            docker build \
+              -t europe-west3-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${PROJECT_NAME}/claims-apis:${CIRCLE_SHA1} .
+            gcloud container clusters get-credentials lct-prod-cluster print-access-token | docker login -u oauth2accesstoken --password-stdin https://europe-west3-docker.pkg.dev
+            docker push \
+              europe-west3-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${PROJECT_NAME}/claims-apis:${CIRCLE_SHA1}
+      - run:
+          name: Deploy to GKE
+          command: |
+            envsubst < ${HOME}/project/claims-deployment.yaml > ${HOME}/project/k8s.yml
+            kubectl apply -f ${HOME}/project/k8s.yml
+            kubectl rollout status deployment/claims-deployment 
+
+workflows:
+  claims-workflow:
+    jobs:
+      - test:
+          context: SonarCloud
+      - build:
+          requires:
+            - test
+      - dev-build-and-deploy:
+          context: DIGITAL_OCEAN
+          requires:
+            - build
+          filters:
+            branches:
+              only: dev
+      - approve-test-stage:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: uat
+      - test-build-and-deploy:
+          context: DIGITAL_OCEAN
+          requires:
+            - approve-test-stage
+          filters:
+            branches:
+              only: uat
+      - approve-prod-stage:
+          type: approval
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
+      - prod-build-and-deploy:
+          context: GCP
+          requires:
+            - approve-prod-stage
+          filters:
+            branches:
+              only: main

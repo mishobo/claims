@@ -1,0 +1,102 @@
+#################################################################################
+####################### 1st Ingress Rule - rewrite ##############################
+#################################################################################
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-claims
+  namespace: backend
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      add_header 'Access-Control-Allow-Origin' "*.dev.lctafrica.net" always;
+#      add_header 'Access-Control-Allow-Credentials' "true" always;
+#      add_header 'Access-Control-Allow-Methods' "PUT, GET, POST, DELETE, OPTIONS" always;
+
+  #    nginx.ingress.kubernetes.io/cors-allow-origin: http://localhost:3002
+  # annotations:
+  #   cert-manager.io/issuer: letsencrypt-nginx
+spec:
+   tls:
+   - hosts:
+     - "*.lctafrica.net"
+     secretName: lct-tls-secret
+   rules:
+    - http:
+        paths:
+          - path: /api/v1/preauthorization/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+          - path: /api/v1/document/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+          - path: /api/v1/benefit/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+          - path: /api/v1/visit/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+          - path: /api/v1/migration/.*
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+   ingressClassName: nginx
+
+---
+
+#################################################################################
+####################### 2nd Ingress Rule - rewrite ##############################
+#################################################################################
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-claims-with-rewrite
+  namespace: backend
+  annotations:
+#    nginx.ingress.kubernetes.io/use-regex: "true"
+#    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+spec:
+  tls:
+    - hosts:
+        - "*.lctafrica.net"
+      secretName: lct-tls-secret
+  rules:
+   - http:
+        paths:
+          - path: /claims(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: claims-service
+                port:
+                  number: 8088
+  ingressClassName: nginx
+

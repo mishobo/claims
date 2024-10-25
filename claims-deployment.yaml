@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claims-deployment
+  labels:
+    app: claims-apis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: claims-apis
+  template:
+    metadata:
+      labels:
+        app: claims-apis
+    spec:
+      containers:
+        - name: claims-apis
+          image: europe-west3-docker.pkg.dev/lctafrica/lct-v2/claims-apis:2023090500
+          ports:
+            - containerPort: 8088
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: host
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: port
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: claimsDbName
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: password
+#          resources:
+#            requests:
+#              cpu: 250m
+#              memory: 2048Mi
+#            limits:
+#              cpu: 500m
+#              memory: 8192Mi #8GB
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claims-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8088
+      targetPort: 8088
+  selector:
+    app: claims-apis

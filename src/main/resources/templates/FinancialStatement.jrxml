@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 8.1.0.final using JasperReports Library version 6.20.0-2bc7ab61c56f459e8176eb05c7705e145cd400ad  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Financial" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="832" leftMargin="5" rightMargin="5" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="8e15d519-eab3-497d-b483-a5c1caac3ee0">
+    <style name="Title" fontName="DejaVu Sans" fontSize="26" isBold="true"/>
+    <style name="SubTitle" forecolor="#666666" fontName="DejaVu Sans" fontSize="18"/>
+    <style name="Column header" forecolor="#666666" fontName="DejaVu Sans" fontSize="7" isBold="true"/>
+    <style name="Detail" fontName="DejaVu Sans" fontSize="7"/>
+    <parameter name="time" class="java.lang.String"/>
+    <parameter name="scheme" class="java.lang.String"/>
+    <parameter name="fromdate" class="java.lang.String"/>
+    <parameter name="todate" class="java.lang.String"/>
+    <field name="visitNumber" class="java.lang.Long"/>
+    <field name="memberNumber" class="java.lang.String"/>
+    <field name="memberName" class="java.lang.String"/>
+    <field name="invoiceDate" class="java.lang.String"/>
+    <field name="invoiceNumber" class="java.lang.String"/>
+    <field name="totalInvoiceAmount" class="java.math.BigDecimal"/>
+    <field name="providerName" class="java.lang.String"/>
+    <field name="benefitName" class="java.lang.String"/>
+    <field name="category" class="java.lang.String"/>
+    <field name="status" class="java.lang.String"/>
+    <field name="claimType" class="java.lang.String"/>
+    <field name="categoryDesc" class="java.lang.String"/>
+    <field name="sentToPayer" class="java.lang.String"/>
+    <field name="payer" class="java.lang.String"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="56" splitType="Stretch">
+            <line>
+                <reportElement positionType="FixRelativeToBottom" x="0" y="35" width="842" height="1" uuid="2c4ebb21-8745-45a1-a9ad-477acaac72cb"/>
+                <graphicElement>
+                    <pen lineWidth="0.5" lineColor="#999999"/>
+                </graphicElement>
+            </line>
+            <staticText>
+                <reportElement style="Column header" x="0" y="20" width="50" height="15" forecolor="#000000" uuid="24ee2ef9-930f-4307-8db4-02b5e9fdf605">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e2c14227-6958-49f7-a794-3462ed62d475"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[VISIT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="50" y="20" width="70" height="15" forecolor="#000000" uuid="fe8039f7-a2ca-4a68-a496-b20eab6d1f17">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4fce862a-62ef-47c4-9564-677ecfdb0ae4"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true" isItalic="false"/>
+                </textElement>
+                <text><![CDATA[MEMBER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="120" y="20" width="100" height="15" forecolor="#000000" uuid="05c24e1f-a780-40f9-b2ad-36fd4c176170">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b736aea6-4e77-42d6-9c76-ff071f07368d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[NAME]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="220" y="20" width="40" height="15" forecolor="#000000" uuid="e44f04bf-a683-427b-9bb1-985debb89cd7">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9855e197-aac1-401c-b59d-9e6f52e74e80"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[DATE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="260" y="20" width="70" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[INVOICE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="330" y="20" width="50" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[AMOUNT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="380" y="20" width="100" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[PROVIDER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="480" y="20" width="80" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[BENEFIT]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="560" y="20" width="50" height="30" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <text><![CDATA[CATEGORY]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="610" y="20" width="40" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[CAT DESC]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="650" y="20" width="40" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[STATUS]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="690" y="20" width="40" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[C. TYPE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="730" y="20" width="40" height="30" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <text><![CDATA[SENT TO PAYER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" x="770" y="20" width="50" height="15" forecolor="#000000" uuid="73c5a61d-f25e-4cd1-9c41-9470435533f6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[PAYER]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="16" splitType="Stretch">
+            <line>
+                <reportElement positionType="FixRelativeToBottom" x="0" y="15" width="842" height="1" uuid="ffde0804-90e8-496b-86fb-ee363619f187"/>
+                <graphicElement>
+                    <pen lineWidth="0.5" lineColor="#999999"/>
+                </graphicElement>
+            </line>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="0" y="1" width="50" height="15" uuid="f474be24-7e1f-4364-9967-390e0243f490">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e2c14227-6958-49f7-a794-3462ed62d475"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{visitNumber}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="50" y="1" width="70" height="15" uuid="d8d669af-0908-4da0-affc-5b0a513032da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4fce862a-62ef-47c4-9564-677ecfdb0ae4"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{memberNumber}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="120" y="1" width="100" height="15" uuid="fdacec8d-caf8-4998-9381-b1eadd1eb852">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b736aea6-4e77-42d6-9c76-ff071f07368d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{memberName}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="220" y="1" width="40" height="15" uuid="303d1695-5c83-465a-8c1e-104586ae704f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9855e197-aac1-401c-b59d-9e6f52e74e80"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{invoiceDate}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="260" y="1" width="70" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{invoiceNumber}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="330" y="1" width="50" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{totalInvoiceAmount}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="380" y="1" width="100" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{providerName}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="480" y="1" width="80" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{benefitName}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="560" y="1" width="50" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="610" y="1" width="40" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{categoryDesc}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="650" y="1" width="40" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="690" y="1" width="40" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{claimType}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="730" y="1" width="40" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{sentToPayer}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement style="Detail" x="770" y="1" width="50" height="15" uuid="19312b2e-a68d-44b8-aaac-863e835415da">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0bfa9902-a3d7-4d08-b863-d1a0a8ae427d"/>
+                </reportElement>
+                <box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+                <textFieldExpression><![CDATA[$F{payer}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="20" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band splitType="Stretch"/>
+    </summary>
+</jasperReport>

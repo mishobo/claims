@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: backend
+data:
+  host: uat-db-mysql-nyc1-45028-do-user-13112112-0.b.db.ondigitalocean.com
+  port: "25060"
+  claimsDbName: claims
+  membershipDbName: membership
+  profileDbName: profile
+  notificationDbName: notification
+  ticketingDbName: ticketing
+  keycloakDbName: keycloak
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+  namespace: backend
+data:
+  username: ZG9hZG1pbg==
+  password: QVZOU19hVnN3SWVyeVBYQldZN2FyT3Ba
+type: Opaque
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-secrets
+  namespace: backend
+data:
+  username: bGN0LWFkbWlu
+  password: bGN0LWFkbWluLXNlY3JldA==
+type: Opaque

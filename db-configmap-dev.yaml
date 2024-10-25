@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  host: 35.237.243.33
+  claimsDbName: claims
+  membershipDbName: membership
+  profileDbName: profile
+  notificationDbName: notification
+  ticketingDbName: ticketing
+  keycloakDbName: keycloak
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secrets
+data:
+  username: cm9vdA==
+  password: TEtHeE5EdHduRTM5bEJGcg==
+type: Opaque
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-secrets
+data:
+  username: bGN0LWFkbWlu
+  password: bGN0LWFkbWluLXNlY3JldA==
+type: Opaque

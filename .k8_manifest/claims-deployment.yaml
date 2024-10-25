@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claims-deployment
+  namespace: backend
+  labels:
+    app: claims-apis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claims-apis
+  template:
+    metadata:
+      labels:
+        app: claims-apis
+    spec:
+      containers:
+        - name: claims-apis
+          image: registry.digitalocean.com/lct-registry/claims-apis@sha256:fae526840ced0b800f00a2cbc31767b14fff6fb1a1f0322b9f5f4b5500b706cd
+          ports:
+            - containerPort: 8088
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: host
+
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: port
+
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: claimsDbName
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: username
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claims-service
+  namespace: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8088
+      targetPort: 8088
+  selector:
+    app: claims-apis
+
+

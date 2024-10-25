@@ -1,0 +1,21 @@
+server:
+  port: 8085
+
+spring:
+  datasource:
+    url: jdbc:mysql://${HOST:docker-mysql}:3306/${MYSQL_DATABASE_LCTCLAIMS:lctClaims}?allowPublicKeyRetrieval=true&useSSL=False
+    driverClassName: org.mariadb.jdbc.Driver
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_ROOT_PASSWORD:123456}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
